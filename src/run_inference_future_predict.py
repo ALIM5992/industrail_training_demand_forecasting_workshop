@@ -36,6 +36,10 @@ def run_inference_future_predict(
     model = joblib.load(model_path)
     df_future['sales_qty_pred'] = model.predict(X_future)
 
+    # Decode IDs back to original labels before saving
+    df_future['store_id'] = store_le.inverse_transform(df_future['store_id'])
+    df_future['item_id']  = item_le.inverse_transform(df_future['item_id'])
+
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     df_future.to_csv(output_path, index=False)
     print(f'Future predictions saved to {output_path}')
